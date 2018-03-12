@@ -29,41 +29,7 @@ public class DomainTests {
     @Autowired
     ContactRepo contactRepo;
 
-    @Test
-    public void should(){
-        User user = new User("Matt");
 
-        Phone phone = new Phone("Nokia");
-
-        Contact contact = new Contact("John", 123456);
-        Contact contact2 = new Contact("Ann", 321654);
-        Contact contact3 = new Contact("Patt", 654321);
-
-        List<Phone> phoneList = new ArrayList<>();
-        phoneList.add(phone);
-        user.setPhones(phoneList);
-
-        List<Contact> contactList = new ArrayList<>();
-        contactList.add(contact);
-        phone.setContacts(contactList);
-
-
-        user = userRepo.saveAndFlush(user);
-
-        Assertions.assertThat(user.getPhones()).size().isEqualTo(1);
-        Assertions.assertThat(user.getPhones().get(0).getContacts()).size().isEqualTo(1);
-
-        contactList.add(contact2);
-        contactList.add(contact3);
-        phone.setContacts(contactList);
-
-        user = userRepo.saveAndFlush(user);
-
-        Assertions.assertThat(user.getPhones()).size().isEqualTo(1);
-        Assertions.assertThat(user.getPhones().get(0).getContacts()).size().isEqualTo(3);
-
-
-    }
 
     @Before
     public void prepare(){
@@ -113,22 +79,35 @@ public class DomainTests {
         phoneRepo.saveAndFlush(phone2);
 
 
+        //Get Phones again to refresh
+        phone = phoneRepo.findById(1L).get();
+        phone2 = phoneRepo.findById(2L).get();
+
         User user = userRepo.findAll().get(0);
 
         user.getPhones().add(phone);
         user = userRepo.saveAndFlush(user);
 
+
+        User usercheck = userRepo.findAll().get(0);
+        User usercheck2 = userRepo.findById(1L).get();
+
+
+        user = userRepo.findById(1L).get();
+
         Assertions.assertThat(user.getPhones()).size().isEqualTo(1);
         Assertions.assertThat(user.getPhones().get(0).getContacts()).size().isEqualTo(2);
 
         //Get User again
-        user = userRepo.findAll().get(0);
+        user = userRepo.findById(1L).get();
 
         user.getPhones().add(phone2);
         user = userRepo.saveAndFlush(user);
 
+        user = userRepo.findById(1L).get();
+
         Assertions.assertThat(user.getPhones()).size().isEqualTo(2);
-        Assertions.assertThat(user.getPhones().get(0).getContacts()).size().isEqualTo(2);
+        Assertions.assertThat(user.getPhones().get(0).getContacts()).size().isEqualTo(3);
         Assertions.assertThat(user.getPhones().get(1).getContacts()).size().isEqualTo(3);
 
     }

@@ -3,6 +3,7 @@ package com.mmc.phone.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -10,7 +11,8 @@ import javax.persistence.*;
 public class Contact {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "contact_pk")
     private long id;
 
     @Column(name = "contact_name")
@@ -25,5 +27,22 @@ public class Contact {
     }
 
     public Contact() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Contact)) return false;
+        if (!super.equals(o)) return false;
+        Contact contact = (Contact) o;
+        return id == contact.id &&
+                number == contact.number &&
+                Objects.equals(name, contact.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), id, name, number);
     }
 }
