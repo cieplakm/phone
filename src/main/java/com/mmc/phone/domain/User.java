@@ -1,6 +1,8 @@
 package com.mmc.phone.domain;
 
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,8 @@ public class User {
     @Column(name = "user_name")
     private String name;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToMany( fetch = FetchType.EAGER)
     private List<Phone> phones;
 
 
